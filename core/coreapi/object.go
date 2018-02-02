@@ -15,6 +15,7 @@ import (
 	caopts "github.com/ipfs/go-ipfs/core/coreapi/interface/options"
 	dag "github.com/ipfs/go-ipfs/merkledag"
 	dagutils "github.com/ipfs/go-ipfs/merkledag/utils"
+	pin "github.com/ipfs/go-ipfs/pin"
 	ft "github.com/ipfs/go-ipfs/unixfs"
 
 	cid "gx/ipfs/QmYVNvtQkeZ6AKSwDrjQTs432QtL6umrrK41EBq3cu7iSP/go-cid"
@@ -116,9 +117,21 @@ func (api *ObjectAPI) Put(ctx context.Context, src io.Reader, opts ...caopts.Obj
 		return nil, err
 	}
 
+	if options.Pin {
+		defer api.node.Blockstore.PinLock().Unlock()
+	}
+
 	err = api.node.DAG.Add(ctx, dagnode)
 	if err != nil {
 		return nil, err
+	}
+
+	if options.Pin {
+		api.node.Pinning.PinWithMode(dagnode.Cid(), pin.Recursive)
+		err = api.node.Pinning.Flush()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return coreiface.IpfsPath(dagnode.Cid()), nil
