@@ -12,6 +12,7 @@ import (
 	core "github.com/ipfs/go-ipfs/core"
 
 	ma "gx/ipfs/QmYmsdtJ3HsodkePE3eU3TsCaP2YvPZJ4LoXnNkDE5Tpt7/go-multiaddr"
+	pstore "gx/ipfs/QmXauCuJzmzapetmC6W4TuDJLL1yFFrVzSHoWv8YdbmnxH/go-libp2p-peerstore"
 	"gx/ipfs/QmdE4gMduCKCGAcczM2F5ioYDfdeKuPix138wrES1YSr7f/go-ipfs-cmdkit"
 )
 
@@ -267,10 +268,14 @@ can transparently connect to a p2p service.
 			return
 		}
 
-		_, peer, err := ParsePeerParam(req.Arguments()[0])
+		addr, peer, err := ParsePeerParam(req.Arguments()[0])
 		if err != nil {
 			res.SetError(err, cmdkit.ErrNormal)
 			return
+		}
+
+		if addr != nil {
+			n.Peerstore.AddAddr(peer, addr, pstore.TempAddrTTL)
 		}
 
 		proto := "/p2p/" + req.Arguments()[1]
