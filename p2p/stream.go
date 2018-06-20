@@ -43,8 +43,12 @@ func (s *Stream) Reset() error {
 
 func (s *Stream) startStreaming() {
 	go func() {
-		io.Copy(s.Local, s.Remote)
-		s.Reset()
+		_, err := io.Copy(s.Local, s.Remote)
+		if err != nil {
+			s.Reset()
+		} else {
+			s.Close()
+		}
 	}()
 
 	go func() {
