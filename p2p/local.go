@@ -2,7 +2,6 @@ package p2p
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"gx/ipfs/QmNqRnejxJxjRroz7buhrjfU8i3yNBLa81hFtmf2pXEffN/go-multiaddr-net"
@@ -105,11 +104,11 @@ func (l *localListener) start() error {
 }
 
 func (l *localListener) Close() error {
-	if l.listener == nil {
-		return errors.New("uninitialized")
+	ok, err := l.p2p.Listeners.Deregister(getListenerKey(l))
+	if err != nil {
+		return err
 	}
-
-	if l.p2p.Listeners.Deregister(getListenerKey(l)) {
+	if ok {
 		l.listener.Close()
 		l.listener = nil
 	}
