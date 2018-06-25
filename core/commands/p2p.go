@@ -15,7 +15,7 @@ import (
 	p2p "github.com/ipfs/go-ipfs/p2p"
 
 	ma "gx/ipfs/QmYmsdtJ3HsodkePE3eU3TsCaP2YvPZJ4LoXnNkDE5Tpt7/go-multiaddr"
-	pstore "gx/ipfs/QmXauCuJzmzapetmC6W4TuDJLL1yFFrVzSHoWv8YdbmnxH/go-libp2p-peerstore"
+	pstore "gx/ipfs/QmZR2XWVVBCtbgBWnQhWk2xcQfaR3W8faQPriAiaaj7rsr/go-libp2p-peerstore"
 	"gx/ipfs/QmZNkThpqfVXs9GNbexPrfBbXSLNYeKrE7jwFM2oqHbyqN/go-libp2p-protocol"
 	"gx/ipfs/QmaKviZCLQrpuyFdSjteik7kJFcQpcyZgb1VuuwaCBBaEa/go-ipfs-addr"
 	"gx/ipfs/QmdE4gMduCKCGAcczM2F5ioYDfdeKuPix138wrES1YSr7f/go-ipfs-cmdkit"
@@ -338,8 +338,15 @@ var p2pCloseCmd = &cmds.Command{
 		}
 		n.P2P.Listeners.Unlock()
 
+		var errs []string
 		for _, l := range todo {
-			l.Close()
+			if err := l.Close(); err != nil {
+				errs = append(errs, err.Error())
+			}
+		}
+		if len(errs) != 0 {
+			res.SetError(fmt.Errorf("errors when closing streams: %s", strings.Join(errs, "; ")), cmdkit.ErrNormal)
+			return
 		}
 
 		res.SetOutput(len(todo))
