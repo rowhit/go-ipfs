@@ -14,10 +14,10 @@ import (
 	core "github.com/ipfs/go-ipfs/core"
 	p2p "github.com/ipfs/go-ipfs/p2p"
 
+	"gx/ipfs/QmWUtfQveCqT8cgNzN54at4sDMiFbANFRFCXuSDiTqJwC8/go-ipfs-addr"
 	ma "gx/ipfs/QmYmsdtJ3HsodkePE3eU3TsCaP2YvPZJ4LoXnNkDE5Tpt7/go-multiaddr"
-	pstore "gx/ipfs/QmZR2XWVVBCtbgBWnQhWk2xcQfaR3W8faQPriAiaaj7rsr/go-libp2p-peerstore"
 	"gx/ipfs/QmZNkThpqfVXs9GNbexPrfBbXSLNYeKrE7jwFM2oqHbyqN/go-libp2p-protocol"
-	"gx/ipfs/QmaKviZCLQrpuyFdSjteik7kJFcQpcyZgb1VuuwaCBBaEa/go-ipfs-addr"
+	pstore "gx/ipfs/QmZR2XWVVBCtbgBWnQhWk2xcQfaR3W8faQPriAiaaj7rsr/go-libp2p-peerstore"
 	"gx/ipfs/QmdE4gMduCKCGAcczM2F5ioYDfdeKuPix138wrES1YSr7f/go-ipfs-cmdkit"
 )
 
