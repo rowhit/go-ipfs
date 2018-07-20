@@ -19,7 +19,6 @@ import (
 	"github.com/ipfs/go-ipfs/thirdparty/verifcid"
 	uio "github.com/ipfs/go-ipfs/unixfs/io"
 
-	u "gx/ipfs/QmPdKqUcHGFdeSpvjVoaTRPPstGif9GBZb5Q56RVw9o69A/go-ipfs-util"
 	offline "gx/ipfs/QmShbyKV9P7QuFecDHXsgrQ4rxxm71MUkGVpwedT4VQ8Bf/go-ipfs-exchange-offline"
 	cid "gx/ipfs/QmYVNvtQkeZ6AKSwDrjQTs432QtL6umrrK41EBq3cu7iSP/go-cid"
 	"gx/ipfs/QmdE4gMduCKCGAcczM2F5ioYDfdeKuPix138wrES1YSr7f/go-ipfs-cmdkit"
@@ -416,9 +415,13 @@ new pin and removing the old one.
 	},
 	Marshalers: cmds.MarshalerMap{
 		cmds.Text: func(res cmds.Response) (io.Reader, error) {
-			added, ok := res.Output().(*PinOutput)
+			v, err := unwrapOutput(res.Output())
+			if err != nil {
+				return nil, err
+			}
+			added, ok := v.(*PinOutput)
 			if !ok {
-				return nil, u.ErrCast()
+				return nil, e.TypeErr(added, v)
 			}
 
 			buf := new(bytes.Buffer)
